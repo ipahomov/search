@@ -122,19 +122,25 @@ public class SearchService {
         int allLinksSize = allLinks.size();
         for (int i = 0; i < allLinksSize; i++) {
             Link link1 = allLinks.get(i);
-
+            int count = 0;
             for (int j = i + 1; j < allLinksSize; j++) {
                 Link link2 = allLinks.get(j);
                 if (link1.getUrl().equals(link2.getUrl())) {
-                    int[] updateArr = link1.getPositions();
+                    int[] updateArr = link2.getPositions();
                     for (int m = 0; m < updateArr.length; m++) {
-                        updateArr[m] += link2.getPositions()[m];
+                        updateArr[m] += link1.getPositions()[m];
                     }
-                    link1.setPositions(updateArr);
+                    link2.setPositions(updateArr);
+                    link2.setAverage(rate(link2));
+                    results.add(link2);
+                    count++;
                 }
             }
-            link1.setAverage(rate(link1));
-            results.add(link1);
+            if(count>0){
+                link1.setAverage(rate(link1));
+                results.add(link1);
+            }
+
         }
 
         return results;
