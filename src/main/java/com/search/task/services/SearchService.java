@@ -1,23 +1,30 @@
 package com.search.task.services;
 
+import com.search.task.link.Link;
+import com.search.task.link.LinkComp;
 import com.search.task.searchers.AbstractSearcher;
+import org.apache.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
+ * Search class for search user request in various searcher
+ * and print it with rating.
  * Created by IPahomov on 09.07.2016.
  */
 public class SearchService {
+    private static final Logger log = Logger.getLogger(SearchService.class);
     private List<AbstractSearcher> searchers;
     private Integer searchersCount;
     private Set<Link> results;
-    public static Boolean needMenu = true;
-    Scanner scanner;
 
     public SearchService(List<AbstractSearcher> searchers) {
         this.searchers = searchers;
         this.searchersCount = searchers.size();
-        scanner = new Scanner(System.in);
     }
 
     /**
@@ -25,6 +32,8 @@ public class SearchService {
      */
     public void menu() {
         System.out.println("Welcome to multisearcher!");
+        Boolean needMenu = true;
+        Scanner scanner = new Scanner(System.in);
         while (needMenu) {
             printMenu();
             int choice = scanner.nextInt();
@@ -34,9 +43,6 @@ public class SearchService {
                     break;
                 case 1:
                     startSearch();
-                    break;
-                default:
-                    needMenu = true;
                     break;
             }
             needMenu = true;
@@ -57,8 +63,9 @@ public class SearchService {
      */
     private void startSearch() {
         System.out.println("Please, input search text");
-        Scanner sc = new Scanner(System.in);
-        String request = sc.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        String request = scanner.nextLine();
+        log.info("Inputted text: " + request);
         if (validate(request)) {
             System.out.println("Inputted text: " + request);
             System.out.println("Searching...\n");
@@ -75,10 +82,7 @@ public class SearchService {
      * @return true or false
      */
     private boolean validate(String request) {
-        if (null != request && !request.isEmpty()) {
-            return true;
-        }
-        return false;
+        return null != request && !request.isEmpty();
     }
 
     /**
@@ -100,15 +104,11 @@ public class SearchService {
             }
             sPosition++;
         }
+        log.info("All Links: " + allLinks);
 
         sort(allLinks);
         printTable(results);
-
-        // temp for debug
-        System.out.println("ALL LINKS");
-        for (Link link : allLinks)
-            System.out.println(link.toString());
-
+        writeToFile(results);
     }
 
     /**
@@ -125,6 +125,7 @@ public class SearchService {
             int count = 0;
             for (int j = i + 1; j < allLinksSize; j++) {
                 Link link2 = allLinks.get(j);
+
                 if (link1.getUrl().equals(link2.getUrl())) {
                     int[] updateArr = link2.getPositions();
                     for (int m = 0; m < updateArr.length; m++) {
@@ -136,13 +137,13 @@ public class SearchService {
                     count++;
                 }
             }
-            if(count>0){
+            if (count == 0) {
                 link1.setAverage(rate(link1));
                 results.add(link1);
+
             }
-
         }
-
+        log.info("Added links to set: " + results);
         return results;
     }
 
@@ -153,12 +154,10 @@ public class SearchService {
      * @return rating of link
      */
     private Double rate(Link link) {
-        double rating;
         int[] positions = link.getPositions();
         int size = positions.length;
         double sumPositions = 0;
-        int i = 0;
-        while (i < size) {
+        for (int i = 0; i < size; ) {
             for (AbstractSearcher searcher : this.searchers) {
                 if (positions[i] != 0) {
                     sumPositions += positions[i] * searcher.getRate();
@@ -169,9 +168,7 @@ public class SearchService {
                 i++;
             }
         }
-        rating = sumPositions / size;
-
-        return rating;
+        return sumPositions / size;
     }
 
     /**
@@ -180,25 +177,53 @@ public class SearchService {
      * @param results links
      */
     private void printTable(Set<Link> results) {
-        // print table header
+        // fill table header
         int num = 1;
-        System.out.println();
         System.out.printf("%-5s%-100s", "Num", "Link");
         for (AbstractSearcher searcher : searchers) {
             System.out.printf("%-8s", searcher.getName());
         }
         System.out.printf("%-10s%n", "Average");
-        System.out.println();
 
         // fill table
         for (Link link : results) {
             System.out.printf("%-5s%-100s", num++, link.getUrl());
-            int[] searchPos = link.getPositions();
-            for (int pos : searchPos) {
+            for (int pos : link.getPositions()) {
                 System.out.printf("%-8s", pos);
             }
             System.out.printf("%-5.3f%n", link.getAverage());
         }
 
+    }
+
+    /**
+     * Write results to file
+     *
+     * @param results of request
+     */
+    private void writeToFile(Set<Link> results) {
+        String file = "link_results.txt";
+        FileWriter writer = null;
+        int count = 0;
+        try {
+            writer = new FileWriter(file, true);
+            writer.write("Num " + " Average " + " Link \n");
+            for (Link link : results) {
+                writer.write(++count + "  " + new BigDecimal(link.getAverage()).setScale(3, RoundingMode.UP).doubleValue());
+                writer.write("   " + link.getUrl() + "\n");
+            }
+        } catch (IOException e) {
+            log.error("Error write to file: " + e.getMessage());
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                log.error("Error close file: " + e.getMessage());
+            }
+        }
+        System.out.println("Results added to file: " + "link_results.txt");
+        log.info("Results added to file: " + "link_results.txt");
     }
 }

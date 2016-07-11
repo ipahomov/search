@@ -8,8 +8,8 @@ public class Google extends AbstractSearcher {
     public Google(){
         this.name = "Google";
         this.rate = 1.4011;
-        this.ADDRESS = "http://google.by/search?q=";
-        this.TAG = "h3.r a";
+        this.address = "http://google.by/search?q=";
+        this.tag = "h3.r a";
     }
 
 }

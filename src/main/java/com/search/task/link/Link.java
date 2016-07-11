@@ -1,11 +1,12 @@
-package com.search.task.services;
+package com.search.task.link;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by IPahomov on 10.07.2016.
  */
-public class Link implements Comparable<Link> {
+public class Link implements Comparable<Link>, Serializable {
     private String url;
     private Integer position;
     private int[] positions;

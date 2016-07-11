@@ -1,4 +1,4 @@
-package com.search.task.services;
+package com.search.task.link;
 
 import java.util.Comparator;
 

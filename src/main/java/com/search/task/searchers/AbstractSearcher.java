@@ -1,6 +1,7 @@
 package com.search.task.searchers;
 
-import com.search.task.services.Link;
+import com.search.task.link.Link;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,7 +9,6 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,48 +16,63 @@ import java.util.regex.Pattern;
  * Created by IPahomov on 09.07.2016.
  */
 abstract public class AbstractSearcher {
+    private static final Logger log = Logger.getLogger(AbstractSearcher.class);
+    private static final String USER_AGENT = "Mozilla";
     protected String name;
     protected Double rate;
-    protected String ADDRESS;
-    protected String TAG;
-    protected Map<Integer, String> searcherResults;
+    protected String address;
+    protected String tag;
 
+    /**
+     * Get list of results from searcher
+     *
+     * @param request inputted by user
+     * @return list of results
+     */
     public List<Link> search(String request) {
         List<Link> links = new ArrayList<Link>();
 
         Document doc = null;
         try {
-            doc = Jsoup.connect(ADDRESS + request)
-                    .userAgent("Mozilla")
+            doc = Jsoup.connect(address + request)
+                    .userAgent(USER_AGENT)
                     .get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error connect" + e.getMessage());
         }
 
-        int pos = 1;
-        for (Element result : doc.select(TAG)) {
-            String tempUrl = result.attr("href");
+        int position = 1;
+        if (doc != null) {
+            for (Element result : doc.select(tag)) {
+                String tempUrl = result.attr("href");
+                log.info("Getting url from: " + tempUrl);
 
-            if (tempUrl.contains("http")) {
-                Link link = new Link();
-                link.setPosition(pos++);
-                link.setUrl(getUrlName(tempUrl));
-                links.add(link);
+                if (null != tempUrl && tempUrl.contains("http")) {
+                    Link link = new Link();
+                    link.setPosition(position++);
+                    link.setUrl(getUrlName(tempUrl));
+                    links.add(link);
+                    log.info("Link added: " + link);
+                }
             }
         }
-
         return links;
     }
 
+    /**
+     * Get url by regex pattern
+     *
+     * @param url to regex
+     * @return url name
+     */
     public String getUrlName(String url) {
         String urlName = "";
-        String patern = "(https?://[\\w\\d\\./-]+)";
-        Pattern p = Pattern.compile(patern);
+        String pattern = "(https?://[\\w\\d\\./-]+)";
+        Pattern p = Pattern.compile(pattern);
         Matcher matcher = p.matcher(url);
         if (matcher.find()) {
             urlName = matcher.group(0);
         }
-
         return urlName;
     }
 
@@ -75,13 +90,5 @@ abstract public class AbstractSearcher {
 
     public void setRate(Double rate) {
         this.rate = rate;
-    }
-
-    public Map<Integer, String> getSearcherResults() {
-        return searcherResults;
-    }
-
-    public void setSearcherResults(Map<Integer, String> searcherResults) {
-        this.searcherResults = searcherResults;
     }
 }
