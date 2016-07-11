@@ -39,8 +39,7 @@ abstract public class AbstractSearcher {
             String tempUrl = result.attr("href");
 
             if (tempUrl.contains("http")) {
-                Link link = new Link(this.name);
-                link.setTitle(result.text());
+                Link link = new Link();
                 link.setPosition(pos++);
                 link.setUrl(getUrlName(tempUrl));
                 links.add(link);
@@ -52,7 +51,7 @@ abstract public class AbstractSearcher {
 
     public String getUrlName(String url) {
         String urlName = "";
-        String patern = "(https?://[\\w\\d\\.\\/-]+)";
+        String patern = "(https?://[\\w\\d\\./-]+)";
         Pattern p = Pattern.compile(patern);
         Matcher matcher = p.matcher(url);
         if (matcher.find()) {

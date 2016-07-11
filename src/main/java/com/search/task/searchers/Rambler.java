@@ -7,7 +7,7 @@ public class Rambler extends AbstractSearcher {
 
     public Rambler(){
         this.name = "Rambler";
-        this.rate = 1.2;
+        this.rate = 1.173;
         this.ADDRESS = "http://nova.rambler.ru/search?query=";
         this.TAG = "h2.b-serp-item__header a";
     }

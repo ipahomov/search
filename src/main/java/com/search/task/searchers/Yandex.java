@@ -7,7 +7,7 @@ public class Yandex extends AbstractSearcher {
 
     public Yandex(){
         this.name = "Yandex";
-        this.rate = 1.0;
+        this.rate = 1.5093;
         this.ADDRESS = "http://yandex.com/search?text=";
         this.TAG = "h2.serp-item__title a";
     }

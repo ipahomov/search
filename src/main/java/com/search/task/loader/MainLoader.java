@@ -27,7 +27,7 @@ public class MainLoader {
 
 
         SearchService service = new SearchService(searcherList);
-        service.start();
+        service.menu();
 
 
     }
