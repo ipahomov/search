@@ -54,7 +54,7 @@ public class SearchService {
         }
 
         // sort links
-        results = new TreeMap<Double, Link>();
+        results = new TreeMap<Double, Link>(Collections.<Double>reverseOrder());
         int allLinksSize = allLinks.size();
         for (int i = 0; i < allLinksSize; i++) {
             Link link1 = allLinks.get(i);

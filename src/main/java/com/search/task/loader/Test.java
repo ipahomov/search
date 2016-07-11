@@ -1,5 +1,7 @@
 package com.search.task.loader;
 
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,5 +20,7 @@ public class Test {
         }
 
         System.out.println(urlName);
+
+        ConcurrentNavigableMap<Double, String> map = new ConcurrentSkipListMap<Double, String>();
     }
 }
