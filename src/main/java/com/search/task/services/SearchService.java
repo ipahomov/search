@@ -43,7 +43,9 @@ public class SearchService {
         }
     }
 
-    // menu options
+    /**
+     * Menu options
+     */
     private void printMenu() {
         System.out.println(" Options:");
         System.out.println("        0. Exit");
@@ -58,7 +60,7 @@ public class SearchService {
         Scanner sc = new Scanner(System.in);
         String request = sc.nextLine();
         if (validate(request)) {
-            System.out.println("Inputed text: " + request);
+            System.out.println("Inputted text: " + request);
             System.out.println("Searching...\n");
             search(request);
         } else {
@@ -109,6 +111,12 @@ public class SearchService {
 
     }
 
+    /**
+     * Sort all link to set with ratings
+     *
+     * @param allLinks from all searchers
+     * @return sorted set
+     */
     private Set<Link> sort(List<Link> allLinks) {
         results = new TreeSet<Link>(new LinkComp());
         int allLinksSize = allLinks.size();
@@ -150,7 +158,7 @@ public class SearchService {
                     sumPositions += positions[i] * searcher.getRate();
                 } else {
                     sumPositions += this.searchersCount * (searcher.getRate() - 1);
-                    //size--;
+                    size--;
                 }
                 i++;
             }
