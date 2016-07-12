@@ -18,11 +18,10 @@ public class SearcherTest {
     private static Searcher google;
 
     @BeforeClass
-    public static void prepareTest(){
+    public static void prepareTest() {
         Director director = new Director();
 
-        SearcherBuilder googleSearcher = new GoogleSearcher();
-        director.setSearcherBuilder(googleSearcher);
+        director.setSearcherBuilder(new GoogleSearcher());
         director.constructSearcher();
         google = director.getSearcher();
     }
@@ -40,7 +39,7 @@ public class SearcherTest {
     @Test
     public void testGetUrlName() throws Exception {
         String url = "http://www.weather-forecast.com/locations/Minsk/forecasts/latest";
-        String urlName=google.getUrlName(url);
+        String urlName = google.getUrlName(url);
         log.info("URL name: " + urlName);
         assertEquals("www.weather-forecast.com/locations/Minsk/forecasts/latest", urlName);
     }

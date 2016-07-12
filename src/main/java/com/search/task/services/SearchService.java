@@ -47,7 +47,7 @@ public class SearchService {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 0:
-                    if(null!=writer) {
+                    if (null != writer) {
                         try {
                             writer.close();
                         } catch (IOException e) {
@@ -222,7 +222,7 @@ public class SearchService {
             writer.write("\nNum " + " Average " + " Link for \"" + this.request + "\"\n");
             for (Link link : results) {
                 writer.write(++count + "  " +
-                        + new BigDecimal(link.getAverage()).setScale(2, RoundingMode.UP).doubleValue());
+                        +new BigDecimal(link.getAverage()).setScale(2, RoundingMode.UP).doubleValue());
                 writer.write("     " + link.getUrl() + "\n");
                 writer.flush();
             }

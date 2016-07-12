@@ -12,33 +12,17 @@ import java.util.List;
  */
 public class MainLoader {
     public static void main(String[] args) {
-        /*Google google = new Google();
-        Yandex yandex = new Yandex();
-        Rambler rambler = new Rambler();
-
-        List<AbstractSearcher> searcherList = new ArrayList<AbstractSearcher>();
-        searcherList.add(google);
-        searcherList.add(yandex);
-        searcherList.add(rambler);*/
-
-
-
-
-
         Director director = new Director();
 
-        SearcherBuilder googleSearcher = new GoogleSearcher();
-        director.setSearcherBuilder(googleSearcher);
+        director.setSearcherBuilder(new GoogleSearcher());
         director.constructSearcher();
         Searcher google = director.getSearcher();
 
-        SearcherBuilder yandexSearcher = new YandexSearcher();
-        director.setSearcherBuilder(yandexSearcher);
+        director.setSearcherBuilder(new YandexSearcher());
         director.constructSearcher();
         Searcher yandex = director.getSearcher();
 
-        SearcherBuilder ramblerSearcher = new RamblerSearcher();
-        director.setSearcherBuilder(ramblerSearcher);
+        director.setSearcherBuilder(new RamblerSearcher());
         director.constructSearcher();
         Searcher rambler = director.getSearcher();
 
