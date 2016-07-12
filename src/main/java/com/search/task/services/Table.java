@@ -24,7 +24,7 @@ public class Table {
     public Table(Set<Link> links) {
         this.links = links;
         try {
-            writer = new FileWriter(FILE);
+            writer = new FileWriter(FILE, true);
         } catch (IOException e) {
             log.error("Error file: " + e.getMessage());
         }
