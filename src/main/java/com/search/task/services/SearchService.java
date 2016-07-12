@@ -2,7 +2,7 @@ package com.search.task.services;
 
 import com.search.task.link.Link;
 import com.search.task.link.LinkComp;
-import com.search.task.searchers.AbstractSearcher;
+import com.search.task.searchers.Searcher;
 import org.apache.log4j.Logger;
 
 import java.io.FileWriter;
@@ -18,20 +18,28 @@ import java.util.*;
  */
 public class SearchService {
     private static final Logger log = Logger.getLogger(SearchService.class);
-    private List<AbstractSearcher> searchers;
+    private static final String FILE = "link_results.txt";
+    private List<Searcher> searchers;
     private Integer searchersCount;
+    private String request;
     private Set<Link> results;
+    private FileWriter writer = null;
 
-    public SearchService(List<AbstractSearcher> searchers) {
+    public SearchService(List<Searcher> searchers) {
         this.searchers = searchers;
         this.searchersCount = searchers.size();
+        try {
+            writer = new FileWriter(FILE, true);
+        } catch (IOException e) {
+            log.error("Error open file: " + e.getMessage());
+        }
     }
 
     /**
      * Main menu
      */
     public void menu() {
-        System.out.println("Welcome to multisearcher!");
+        System.out.println("Welcome to Multisearcher!");
         Boolean needMenu = true;
         Scanner scanner = new Scanner(System.in);
         while (needMenu) {
@@ -39,6 +47,13 @@ public class SearchService {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 0:
+                    if(null!=writer) {
+                        try {
+                            writer.close();
+                        } catch (IOException e) {
+                            log.error("Error close file: " + e.getMessage());
+                        }
+                    }
                     System.exit(0);
                     break;
                 case 1:
@@ -64,7 +79,7 @@ public class SearchService {
     private void startSearch() {
         System.out.println("Please, input search text");
         Scanner scanner = new Scanner(System.in);
-        String request = scanner.nextLine();
+        this.request = scanner.nextLine();
         log.info("Inputted text: " + request);
         if (validate(request)) {
             System.out.println("Inputted text: " + request);
@@ -94,7 +109,7 @@ public class SearchService {
         // add all links
         List<Link> allLinks = new ArrayList<Link>();
         int sPosition = 0;
-        for (AbstractSearcher searcher : this.searchers) {
+        for (Searcher searcher : this.searchers) {
             List<Link> searcherLinks = searcher.search(request);
             for (Link link : searcherLinks) {
                 int[] positions = new int[searchersCount];
@@ -158,11 +173,11 @@ public class SearchService {
         int size = positions.length;
         double sumPositions = 0;
         for (int i = 0; i < size; ) {
-            for (AbstractSearcher searcher : this.searchers) {
+            for (Searcher searcher : this.searchers) {
                 if (positions[i] != 0) {
-                    sumPositions += positions[i] * searcher.getRate();
+                    sumPositions += positions[i] * searcher.getRating();
                 } else {
-                    sumPositions += this.searchersCount * (searcher.getRate() - 1);
+                    sumPositions += this.searchersCount * (searcher.getRating() - 1);
                     size--;
                 }
                 i++;
@@ -180,7 +195,7 @@ public class SearchService {
         // fill table header
         int num = 1;
         System.out.printf("%-5s%-100s", "Num", "Link");
-        for (AbstractSearcher searcher : searchers) {
+        for (Searcher searcher : searchers) {
             System.out.printf("%-8s", searcher.getName());
         }
         System.out.printf("%-10s%n", "Average");
@@ -202,26 +217,17 @@ public class SearchService {
      * @param results of request
      */
     private void writeToFile(Set<Link> results) {
-        String file = "link_results.txt";
-        FileWriter writer = null;
         int count = 0;
         try {
-            writer = new FileWriter(file, true);
-            writer.write("Num " + " Average " + " Link \n");
+            writer.write("\nNum " + " Average " + " Link for \"" + this.request + "\"\n");
             for (Link link : results) {
-                writer.write(++count + "  " + new BigDecimal(link.getAverage()).setScale(3, RoundingMode.UP).doubleValue());
-                writer.write("   " + link.getUrl() + "\n");
+                writer.write(++count + "  " +
+                        + new BigDecimal(link.getAverage()).setScale(2, RoundingMode.UP).doubleValue());
+                writer.write("     " + link.getUrl() + "\n");
+                writer.flush();
             }
         } catch (IOException e) {
             log.error("Error write to file: " + e.getMessage());
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                log.error("Error close file: " + e.getMessage());
-            }
         }
         System.out.println("Results added to file: " + "link_results.txt");
         log.info("Results added to file: " + "link_results.txt");

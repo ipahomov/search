@@ -13,15 +13,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by IPahomov on 09.07.2016.
+ * Class Searcher for search requests.
+ * Uses Jsoup to parse results page.
+ *
+ * @see <a href="http://revolweb.ru/prodvizhenie-sajtov/samye-populyarnye-poiskovye-sistemy-na-2015-god">
+ * Ratings</a> for searchers rating in Russia for 2015 year.
+ * Created by IPahomov on 12.07.2016.
  */
-abstract public class AbstractSearcher {
-    private static final Logger log = Logger.getLogger(AbstractSearcher.class);
+public class Searcher {
+    private static final Logger log = Logger.getLogger(Searcher.class);
     private static final String USER_AGENT = "Mozilla";
-    protected String name;
-    protected Double rate;
-    protected String address;
-    protected String tag;
+    private String name;
+    private String address;
+    private String tag;
+    private Double rating;
 
     /**
      * Get list of results from searcher
@@ -31,7 +36,6 @@ abstract public class AbstractSearcher {
      */
     public List<Link> search(String request) {
         List<Link> links = new ArrayList<Link>();
-
         Document doc = null;
         try {
             doc = Jsoup.connect(address + request)
@@ -47,8 +51,9 @@ abstract public class AbstractSearcher {
                 String tempUrl = result.attr("href");
                 log.info("Getting url from: " + tempUrl);
 
+                Link link;
                 if (null != tempUrl && tempUrl.contains("http")) {
-                    Link link = new Link();
+                    link = new Link();
                     link.setPosition(position++);
                     link.setUrl(getUrlName(tempUrl));
                     links.add(link);
@@ -67,11 +72,11 @@ abstract public class AbstractSearcher {
      */
     public String getUrlName(String url) {
         String urlName = "";
-        String pattern = "(https?://[\\w\\d\\./-]+)";
+        String pattern = "https?://([\\w\\d\\./-]+)";
         Pattern p = Pattern.compile(pattern);
         Matcher matcher = p.matcher(url);
         if (matcher.find()) {
-            urlName = matcher.group(0);
+            urlName = matcher.group(1);
         }
         return urlName;
     }
@@ -84,11 +89,19 @@ abstract public class AbstractSearcher {
         this.name = name;
     }
 
-    public Double getRate() {
-        return rate;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setRate(Double rate) {
-        this.rate = rate;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }

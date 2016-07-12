@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
+ * Class fo link.
+ * Contains position for particular searcher
+ * or positions for several searcher
  * Created by IPahomov on 10.07.2016.
  */
 public class Link implements Comparable<Link>, Serializable {
