@@ -55,7 +55,6 @@ public class Link implements Comparable<Link>, Serializable {
         Link link = (Link) o;
 
         return !(url != null ? !url.equals(link.url) : link.url != null);
-
     }
 
     @Override
@@ -74,6 +73,12 @@ public class Link implements Comparable<Link>, Serializable {
     }
 
     public int compareTo(Link o) {
-        return (int) o.getAverage();
+        int result = this.getUrl().compareTo(o.getUrl());
+        if (result == 0) {
+            return result;
+        } else {
+            return Double.compare(this.getAverage(), o.getAverage());
+        }
+
     }
 }
