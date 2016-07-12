@@ -1,7 +1,7 @@
 # search project
 Search is a multisearcher engine, which group requested results by rating.
 
-To start print in console comand in project directory:
- 1) mvn install
- 2) java -jar Search.jar
+To start print in console comand:
+ 1)in project directory: mvn install
+ 2)then in target directory: java -jar Search.jar
  
