@@ -40,7 +40,7 @@ public abstract class Searcher {
         try {
             doc = Jsoup.connect(address + request)
                     .userAgent(userAgent)
-                    .timeout(5000)           //delete
+                    .timeout(3000)
                     .get();
         } catch (IOException e) {
             log.error("Error connect" + e.getMessage());

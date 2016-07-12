@@ -18,7 +18,6 @@ public class Link implements Comparable<Link>, Serializable {
     public String getUrl() {
         return url;
     }
-
     public void setUrl(String url) {
         this.url = url;
     }
@@ -26,7 +25,6 @@ public class Link implements Comparable<Link>, Serializable {
     public Integer getPosition() {
         return position;
     }
-
     public void setPosition(Integer position) {
         this.position = position;
     }
@@ -34,7 +32,6 @@ public class Link implements Comparable<Link>, Serializable {
     public int[] getPositions() {
         return positions;
     }
-
     public void setPositions(int[] positions) {
         this.positions = positions;
     }
@@ -42,7 +39,6 @@ public class Link implements Comparable<Link>, Serializable {
     public double getAverage() {
         return average;
     }
-
     public void setAverage(double average) {
         this.average = average;
     }
