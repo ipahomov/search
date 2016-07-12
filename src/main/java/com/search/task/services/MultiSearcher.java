@@ -44,7 +44,8 @@ public class MultiSearcher {
                     options.exit();
                     break;
                 case 1:
-                    startSearch(options.search());
+                    request = options.search();
+                    startSearch(request);
                     break;
                 default:
                     System.out.println("Enter correct number!");
