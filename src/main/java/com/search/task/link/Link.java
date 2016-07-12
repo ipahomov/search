@@ -74,10 +74,10 @@ public class Link implements Comparable<Link>, Serializable {
 
     public int compareTo(Link o) {
         int result = this.getUrl().compareTo(o.getUrl());
-        if (result == 0) {
-            return result;
-        } else {
+        if (result != 0) {
             return Double.compare(this.getAverage(), o.getAverage());
+        } else {
+            return 0;
         }
 
     }

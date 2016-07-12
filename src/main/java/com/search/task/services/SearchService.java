@@ -58,6 +58,8 @@ public class SearchService {
                 case 1:
                     startSearch();
                     break;
+                default:
+                    continue;
             }
             needMenu = true;
         }
