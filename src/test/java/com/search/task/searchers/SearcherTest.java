@@ -15,16 +15,7 @@ import static org.junit.Assert.*;
  */
 public class SearcherTest {
     private static final Logger log = Logger.getLogger(SearcherTest.class);
-    private static Searcher google;
-
-    @BeforeClass
-    public static void prepareTest() {
-        Director director = new Director();
-
-        director.setSearcherBuilder(new GoogleSearcher());
-        director.constructSearcher();
-        google = director.getSearcher();
-    }
+    private static Searcher google = new GoogleSearcher();
 
     @Test
     public void testSearch() throws Exception {

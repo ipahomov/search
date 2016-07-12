@@ -1,7 +1,6 @@
 package com.search.task.services;
 
 import com.search.task.link.Link;
-import com.search.task.link.LinkComp;
 import com.search.task.searchers.Searcher;
 import org.apache.log4j.Logger;
 
@@ -133,7 +132,7 @@ public class SearchService {
      * @return sorted set
      */
     private Set<Link> sort(List<Link> allLinks) {
-        results = new TreeSet<Link>(new LinkComp());
+        results = new TreeSet<Link>();
         int allLinksSize = allLinks.size();
         for (int i = 0; i < allLinksSize; i++) {
             Link link1 = allLinks.get(i);

@@ -6,24 +6,12 @@ package com.search.task.searchers;
  * in Russia google has 1.73% popularity.
  * Created by IPahomov on 12.07.2016.
  */
-public class RamblerSearcher extends SearcherBuilder {
-    @Override
-    public void buildName() {
-        searcher.setName("Rambler");
-    }
-
-    @Override
-    public void buildAddress() {
-        searcher.setAddress("http://nova.rambler.ru/search?query=");
-    }
-
-    @Override
-    public void buildTag() {
-        searcher.setTag("h2.b-serp-item__header a");
-    }
-
-    @Override
-    public void buildRating() {
-        searcher.setRating(1.173);
+public class RamblerSearcher extends Searcher {
+    public RamblerSearcher() {
+        this.name = "Rambler";
+        this.address = "http://nova.rambler.ru/search?query=";
+        this.tag = "h2.b-serp-item__header a";
+        this.rating = 1.173;
+        this.userAgent = "Mozilla";
     }
 }

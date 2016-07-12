@@ -20,13 +20,13 @@ import java.util.regex.Pattern;
  * Ratings</a> for searchers rating in Russia for 2015 year.
  * Created by IPahomov on 12.07.2016.
  */
-public class Searcher {
+public abstract class Searcher {
     private static final Logger log = Logger.getLogger(Searcher.class);
-    private static final String USER_AGENT = "Mozilla";
-    private String name;
-    private String address;
-    private String tag;
-    private Double rating;
+    protected String name;
+    protected String address;
+    protected String tag;
+    protected Double rating;
+    protected String userAgent;
 
     /**
      * Get list of results from searcher
@@ -39,7 +39,8 @@ public class Searcher {
         Document doc = null;
         try {
             doc = Jsoup.connect(address + request)
-                    .userAgent(USER_AGENT)
+                    .userAgent(userAgent)
+                    .timeout(5000)           //delete
                     .get();
         } catch (IOException e) {
             log.error("Error connect" + e.getMessage());
@@ -85,23 +86,8 @@ public class Searcher {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public Double getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
 }
