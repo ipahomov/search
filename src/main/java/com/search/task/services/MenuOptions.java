@@ -41,7 +41,14 @@ public class MenuOptions {
     }
 
     public void exit() {
-        System.out.println("Goodbye");
+        System.out.println("Goodbye!");
+        if (null != ReaderThread.reader) {
+            try {
+                ReaderThread.reader.close();
+            } catch (IOException e) {
+                log.error("Error close reader: " + e.getMessage());
+            }
+        }
         if (null != Table.writer) {
             try {
                 Table.writer.close();

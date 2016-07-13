@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 public class ReaderThread extends Thread {
     private static final Logger log = Logger.getLogger(ReaderThread.class);
     private Boolean isRead = true;
-    private BufferedReader reader;
+    public static BufferedReader reader;
     private String input;
 
     public ReaderThread() {
@@ -45,4 +45,5 @@ public class ReaderThread extends Thread {
     public String getInput() {
         return input;
     }
+
 }
